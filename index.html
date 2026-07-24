@@ -1,19 +1,50 @@
-<!DOCTYPE html>
-<html lang="ar">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>تطبيق الطقس</title>
-  <link rel="stylesheet" href="style.css" />
-</head>
-<body>
-  <div class="weather-app">
-    <h1>تطبيق الطقس</h1>
-    <input type="text" id="cityInput" placeholder="ادخل اسم المدينة" />
-    <button onclick="getWeather()">عرض الطقس</button>
-    <div id="weatherResult" class="result"></div>
-  </div>
+<div class="app-card">
+    <!-- القسم الرئيسي -->
+    <div class="main-section">
+      <!-- البحث -->
+      <div class="search-box">
+        <input type="text" id="cityInput" placeholder="ابحث عن مدينة (مثلاً: القاهرة)..." value="القاهرة">
+        <button onclick="fetchWeather()">🔍</button>
+      </div>
 
-  <script src="app.js"></script>
-</body>
-</html>
+      <!-- بطاقة الطقس الحالية -->
+      <div class="current-weather">
+        <div class="city-info">
+          <h2 id="cityName">القاهرة</h2>
+          <p id="currentDate">الجمعة، 24 يوليو</p>
+        </div>
+
+        <div class="temp-box">
+          <div>
+            <div class="temp"><span id="tempValue">34</span>°</div>
+            <div class="weather-status" id="weatherCondition">مشمس وغائم جزئياً</div>
+          </div>
+          <div class="weather-icon-main" id="mainIcon">🌤️</div>
+        </div>
+      </div>
+
+      <!-- التفاصيل الجانبية -->
+      <div class="details-grid">
+        <div class="detail-card">
+          <span>الرطوبة</span>
+          <strong id="humidity">45%</strong>
+        </div>
+        <div class="detail-card">
+          <span>الرياح</span>
+          <strong id="windSpeed">18 كم/س</strong>
+        </div>
+        <div class="detail-card">
+          <span>الضغط</span>
+          <strong id="pressure">1012 hPa</strong>
+        </div>
+      </div>
+    </div>
+
+    <!-- قسم التوقعات -->
+    <div class="forecast-section">
+      <div class="forecast-title">توقعات الأيام القادمة 📅</div>
+      <div class="forecast-list" id="forecastList">
+        <!-- سيتم توليد الأيام بالـ JS -->
+      </div>
+    </div>
+  </div>
