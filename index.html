@@ -4,7 +4,237 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>تطبيق الطقس العصري | Cyber Weather</title>
-    <link rel="stylesheet" href="style.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Tajawal:wght@400;500;700;800&display=swap');
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Tajawal', 'Plus Jakarta Sans', sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #090d16; /* أزرق داكن جدًا أقرب للأسود */
+      color: #f1f5f9;
+      padding: 20px;
+    }
+
+    /* الحاوية الرئيسية للتطبيق */
+    .app-card {
+      width: 100%;
+      max-width: 900px;
+      background: #111827;
+      border-radius: 36px;
+      padding: 32px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6);
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 28px;
+    }
+
+    @media (max-width: 850px) {
+      .app-card {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* الجزء الأيمن: الطقس الحالي والبحث */
+    .main-section {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    /* بار البحث */
+    .search-box {
+      display: flex;
+      gap: 12px;
+      background: #1f2937;
+      padding: 8px 12px 8px 16px;
+      border-radius: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      transition: all 0.3s ease;
+    }
+
+    .search-box:focus-within {
+      border-color: #06b6d4;
+      box-shadow: 0 0 15px rgba(6, 182, 212, 0.2);
+    }
+
+    .search-box input {
+      background: transparent;
+      border: none;
+      outline: none;
+      color: #fff;
+      font-size: 1rem;
+      width: 100%;
+    }
+
+    .search-box button {
+      background: linear-gradient(135deg, #06b6d4, #3b82f6);
+      border: none;
+      color: #fff;
+      width: 42px;
+      height: 42px;
+      border-radius: 14px;
+      cursor: pointer;
+      font-size: 1.1rem;
+      transition: transform 0.2s;
+    }
+
+    .search-box button:hover {
+      transform: scale(1.05);
+    }
+
+    /* عرض الطقس الرئيسي */
+    .current-weather {
+      background: linear-gradient(145deg, #1e293b, #0f172a);
+      border-radius: 28px;
+      padding: 28px;
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .current-weather::after {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(6, 182, 212, 0.15) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    .city-info h2 {
+      font-size: 2rem;
+      font-weight: 800;
+    }
+
+    .city-info p {
+      color: #94a3b8;
+      font-size: 0.95rem;
+      margin-top: 4px;
+    }
+
+    .temp-box {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 24px;
+    }
+
+    .temp-box .temp {
+      font-size: 4.5rem;
+      font-weight: 800;
+      letter-spacing: -2px;
+      background: linear-gradient(180deg, #fff, #94a3b8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .weather-icon-main {
+      font-size: 5rem;
+      filter: drop-shadow(0 0 15px rgba(6, 182, 212, 0.4));
+    }
+
+    .weather-status {
+      font-size: 1.2rem;
+      color: #38bdf8;
+      font-weight: 700;
+      margin-top: 8px;
+    }
+
+    /* كروت التفاصيل الفرعية */
+    .details-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    .detail-card {
+      background: #1f2937;
+      padding: 16px;
+      border-radius: 20px;
+      text-align: center;
+      border: 1px solid rgba(255, 255, 255, 0.03);
+    }
+
+    .detail-card span {
+      display: block;
+      color: #94a3b8;
+      font-size: 0.85rem;
+      margin-bottom: 6px;
+    }
+
+    .detail-card strong {
+      font-size: 1.1rem;
+      color: #f8fafc;
+    }
+
+    /* الجزء الأيسر: توقعات الأيام القادمة */
+    .forecast-section {
+      background: #1e293b;
+      border-radius: 28px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .forecast-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+      color: #f1f5f9;
+    }
+
+    .forecast-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .forecast-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 16px;
+      background: rgba(15, 23, 42, 0.4);
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.02);
+      transition: transform 0.2s, background 0.2s;
+    }
+
+    .forecast-item:hover {
+      transform: translateX(-4px);
+      background: rgba(6, 182, 212, 0.1);
+      border-color: rgba(6, 182, 212, 0.2);
+    }
+
+    .forecast-day {
+      font-weight: 600;
+      width: 80px;
+    }
+
+    .forecast-icon {
+      font-size: 1.4rem;
+    }
+
+    .forecast-temp {
+      font-weight: 700;
+      color: #38bdf8;
+    }
+  </style>
 </head>
 <body>
 
@@ -58,6 +288,93 @@
       </div>
     </div>
   </div>
-<script src="app.js"></script>
+
+  <script>
+   const API_KEY = "85ad4ee7053c429a3cc7fc85b94945a6"; // حط الـ Key بتاعك هنا
+
+// دالة تحويل حالة الطقس إلى إيموجي مباشر وسريع
+function getWeatherEmoji(iconCode, weatherId) {
+  // معرفات الأيقونات المشهورة من OpenWeatherMap
+  if (weatherId >= 200 && weatherId < 300) return "🌩️"; // عواصف ورعد
+  if (weatherId >= 300 && weatherId < 500) return "🌧️"; // رذاذ مطر
+  if (weatherId >= 500 && weatherId < 600) return "🌧️"; // أمطار
+  if (weatherId >= 600 && weatherId < 700) return "❄️"; // ثلوج
+  if (weatherId >= 700 && weatherId < 800) return "🌫️"; // ضباب أو غبار
+  if (weatherId === 800) return iconCode.includes("n") ? "🌙" : "☀️"; // صافي (ليلي / نهاري)
+  if (weatherId === 801) return "🌤️"; // غائم جزئياً
+  if (weatherId >= 802) return "☁️"; // غائم
+  return "🌡️";
+}
+
+async function fetchWeather() {
+  const city = document.getElementById("cityInput").value.trim();
+  if (!city) return;
+
+  try {
+    document.getElementById("cityName").innerText = "جاري التحميل...";
+
+    // 1. جلب الطقس الحالي
+    const currentWeatherUrl = `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(city)}&appid=${API_KEY}&units=metric&lang=ar`;
+    const currentResponse = await fetch(currentWeatherUrl);
+    
+    if (!currentResponse.ok) throw new Error("المدينة غير موجودة");
+    const currentData = await currentResponse.json();
+
+    // 2. جلب التوقعات
+    const forecastUrl = `https://api.openweathermap.org/data/2.5/forecast?q=${encodeURIComponent(city)}&appid=${API_KEY}&units=metric&lang=ar`;
+    const forecastResponse = await fetch(forecastUrl);
+    const forecastData = await forecastResponse.json();
+
+    // 3. تحديث الواجهة
+    updateUI(currentData, forecastData);
+
+  } catch (error) {
+    alert(error.message || "حدث خطأ أثناء جلب البيانات");
+    document.getElementById("cityName").innerText = "خطأ في البحث";
+  }
+}
+
+function updateUI(current, forecast) {
+  document.getElementById("cityName").innerText = current.name;
+  document.getElementById("tempValue").innerText = Math.round(current.main.temp);
+  document.getElementById("weatherCondition").innerText = current.weather[0].description;
+  document.getElementById("humidity").innerText = `${current.main.humidity}%`;
+  document.getElementById("windSpeed").innerText = `${Math.round(current.wind.speed * 3.6)} كم/س`;
+  document.getElementById("pressure").innerText = `${current.main.pressure} hPa`;
+
+  // تحديث الإيموجي الرئيسي برمجياً
+  const mainEmoji = getWeatherEmoji(current.weather[0].icon, current.weather[0].id);
+  document.getElementById("mainIcon").innerText = mainEmoji;
+
+  // تحديث قائمة الأيام
+  const forecastList = document.getElementById("forecastList");
+  forecastList.innerHTML = "";
+
+  const dailyData = forecast.list.filter(item => item.dt_txt.includes("12:00:00"));
+
+  dailyData.forEach(item => {
+    const date = new Date(item.dt * 1000);
+    const dayName = date.toLocaleDateString('ar-EG', { weekday: 'long' });
+    
+    // جلب الإيموجي الخاص بكتيب التوقعات
+    const dayEmoji = getWeatherEmoji(item.weather[0].icon, item.weather[0].id);
+
+    forecastList.innerHTML += `
+      <div class="forecast-item">
+        <span class="forecast-day">${dayName}</span>
+        <span class="forecast-icon" style="font-size: 1.5rem;">${dayEmoji}</span>
+        <span class="forecast-temp">${Math.round(item.main.temp)}°</span>
+      </div>
+    `;
+  });
+}
+
+// دعم زر Enter
+document.getElementById("cityInput").addEventListener("keypress", (e) => {
+  if (e.key === "Enter") fetchWeather();
+});
+
+fetchWeather();
+  </script>
 </body>
 </html>
